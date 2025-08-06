@@ -7,6 +7,16 @@
 
 import Foundation
 
-struct TaskModel: Codable {
+struct TaskModel: Identifiable, Codable {
+    let id: String
+    var title: String
+    var description: String
+    var isDone: Bool
     
+    init(id: String = UUID().uuidString, title: String, description: String, isDone: Bool = false) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.isDone = isDone
+    }
 }

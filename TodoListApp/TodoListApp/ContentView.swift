@@ -7,18 +7,16 @@
 
 import SwiftUI
 
-struct Task: Identifiable {
-    let id = UUID()
-    var title: String
-    var isCompleted: Bool = false
-}
-
 struct ContentView: View {
-    @State private var tasks: [Task] = (1...20).map { Task(title: "Tarea \($0)") }
+    @State private var tasks: [TaskModel] = (1...5).map { TaskModel(title: "Tarea \($0)", description: "Descripción") }
     @State private var searchText: String = ""
     @State private var ascendingOrder = true
+    
+    @State private var showingNewTaskSheet = false
+    @State private var newTitle = ""
+    @State private var newDescription = ""
 
-    var filteredTasks: [Task] {
+    var filteredTasks: [TaskModel] {
         tasks
             .filter { searchText.isEmpty || $0.title.lowercased().contains(searchText.lowercased()) }
             .sorted {
@@ -59,22 +57,13 @@ struct ContentView: View {
                 
                 List {
                     ForEach(filteredTasks) { task in
-                        HStack {
-                            Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(task.isCompleted ? .green : .gray)
-                                .onTapGesture {
-                                    toggleTask(task)
-                                }
-                            
-                            Text(task.title)
-                                .strikethrough(task.isCompleted)
-                                .foregroundColor(task.isCompleted ? .gray : .primary)
+                        TaskRowView(task: task) {
+                            toggleTask(task)
                         }
-                        .contentShape(Rectangle())
                     }
                     .onDelete(perform: deleteTask)
                 }
-                .listStyle(.plain )
+                .listStyle(.plain)
             }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
@@ -82,15 +71,25 @@ struct ContentView: View {
                         Spacer()
                         
                         Button(action: {
-                            // Acción del botón
+                            showingNewTaskSheet = true
                         }) {
                             Image(systemName: "plus")
-                                .font(.title3) // Tamaño del ícono
+                                .font(.title3)
                                 .foregroundColor(.white)
-                                .padding(7) // Aumenta tamaño del círculo
+                                .padding(7)
                                 .background(Color.blue)
                                 .clipShape(Circle())
                                 .shadow(radius: 4)
+                                .sheet(isPresented: $showingNewTaskSheet) {
+                                    NewTaskSheet(
+                                        title: $newTitle,
+                                        description: $newDescription,
+                                        onDone: {
+                                            addNewTask()
+                                            showingNewTaskSheet = false
+                                        }
+                                    )
+                                }
                         }
 
                         Spacer()
@@ -106,14 +105,26 @@ struct ContentView: View {
 
 extension ContentView {
     
-    func toggleTask(_ task: Task) {
+    func toggleTask(_ task: TaskModel) {
         if let index = tasks.firstIndex(where: { $0.id == task.id }) {
-            tasks[index].isCompleted.toggle()
+            tasks[index].isDone.toggle()
         }
     }
 
     func deleteTask(at offsets: IndexSet) {
         tasks.remove(atOffsets: offsets)
+    }
+    
+    func addNewTask() {
+        let trimmedTitle = newTitle.trimmingCharacters(in: .whitespaces)
+        guard !trimmedTitle.isEmpty else { return }
+
+        let task = TaskModel(title: trimmedTitle, description: newDescription)
+        tasks.append(task)
+
+        // Reset campos
+        newTitle = ""
+        newDescription = ""
     }
 }
 
