@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct NewTaskSheet: View {
-    @Binding var title: String
-    @Binding var description: String
-    var onDone: () -> Void
+    @State private var title: String = ""
+    @State private var description: String = ""
+    var onDone: (String, String) -> Void
 
     var body: some View {
         NavigationView {
@@ -30,16 +30,14 @@ struct NewTaskSheet: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
-                        onDone()
+                        onDone(title, description)
                     }
                     .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
 
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancelar") {
-                        title = ""
-                        description = ""
-                        onDone()
+                        onDone("", "")
                     }
                 }
             }
@@ -47,23 +45,8 @@ struct NewTaskSheet: View {
     }
 }
 
-
-struct NewTaskSheet_Previews: PreviewProvider {
-    struct PreviewWrapper: View {
-        @State private var title = "Título de prueba"
-        @State private var description = "Descripción de prueba"
-
-        var body: some View {
-            NewTaskSheet(
-                title: $title,
-                description: $description,
-                onDone: {}
-            )
-        }
-    }
-
-    static var previews: some View {
-        PreviewWrapper()
-    }
+#Preview {
+    NewTaskSheet { _, _ in }
 }
+
 
