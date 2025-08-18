@@ -25,8 +25,8 @@ struct TaskRowView: View {
                     .strikethrough(task.isDone)
                     .foregroundColor(task.isDone ? .gray : .primary)
 
-                if !task.description.isEmpty {
-                    Text(task.description)
+                if !task.taskDescription.isEmpty {
+                    Text(task.taskDescription)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -40,6 +40,6 @@ struct TaskRowView: View {
 }
 
 #Preview {
-    TaskRowView(task: TaskModel(title:"Ejemplo de tarea", description: "Descripción opcional", isDone: false),
+    TaskRowView(task: TaskModel(title:"Ejemplo de tarea", taskDescription: "Descripción opcional", isDone: false),
                 toggleDone: {})
 }

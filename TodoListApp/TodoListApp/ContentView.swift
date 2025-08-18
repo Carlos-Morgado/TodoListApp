@@ -6,10 +6,27 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
-    @StateObject var viewModel = TaskViewModel()
+    // Para obtener datos con @Query si los necesitas en algún momento
+    @Query(sort: \TaskModel.title, order: .forward) private var tasks: [TaskModel]
+
+    @StateObject private var viewModel: TaskViewModel
     @State private var showingNewTaskSheet = false
+
+    // Inicializamos el StateObject con el viewModel que nos pasan desde el App
+    init(viewModel: TaskViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+    
+    var filteredTasks: [TaskModel] {
+        tasks
+            .filter { viewModel.searchText.isEmpty || $0.title.localizedStandardContains(viewModel.searchText) }
+            .sorted {
+                viewModel.ascendingOrder ? $0.title < $1.title : $0.title > $1.title
+            }
+    }
 
     var body: some View {
         NavigationView {
@@ -31,7 +48,8 @@ struct ContentView: View {
                             .clipShape(Circle())
                     }
                 }
-                
+
+                // Barra de búsqueda
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(.gray)
@@ -41,14 +59,17 @@ struct ContentView: View {
                 .padding(10)
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
-                
+
                 List {
-                    ForEach(viewModel.filteredTasks) { task in
+                    ForEach(filteredTasks) { task in
                         TaskRowView(task: task) {
                             viewModel.toggleTask(task)
                         }
                     }
-                    .onDelete(perform: viewModel.deleteTask)
+                    .onDelete { indexSet in
+                        let toDelete = indexSet.map { viewModel.filteredTasks[$0] }
+                        toDelete.forEach { viewModel.deleteTask($0) }
+                    }
                 }
                 .listStyle(.plain)
             }
@@ -56,10 +77,9 @@ struct ContentView: View {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
                         Spacer()
-                        
-                        Button(action: {
+                        Button {
                             showingNewTaskSheet = true
-                        }) {
+                        } label: {
                             Image(systemName: "plus")
                                 .font(.title3)
                                 .foregroundColor(.white)
@@ -67,25 +87,36 @@ struct ContentView: View {
                                 .background(Color.blue)
                                 .clipShape(Circle())
                                 .shadow(radius: 4)
-                                .sheet(isPresented: $showingNewTaskSheet) {
-                                    NewTaskSheet(
-                                        onDone: { title, description in
-                                            viewModel.addNewTask(title: title, description: description)
-                                            showingNewTaskSheet = false
-                                        }
-                                    )
-                                }
                         }
-
                         Spacer()
                     }
-                    .frame(maxWidth: .infinity)
+                }
+            }
+            .sheet(isPresented: $showingNewTaskSheet) {
+                NewTaskSheet { title, details in
+                    viewModel.addNewTask(title: title, details: details)
+                    showingNewTaskSheet = false
                 }
             }
         }
     }
 }
 
-#Preview {
-    ContentView()
+
+@MainActor
+func previewContentView() -> some View {
+    let container = try! ModelContainer(for: TaskModel.self)
+    let ctx = container.mainContext
+    // datos de ejemplo
+    let sample = TaskModel(title: "Prueba", taskDescription: "Desc")
+    ctx.insert(sample)
+    try? ctx.save()
+
+    return ContentView(viewModel: TaskViewModel(context: ctx))
+        .modelContainer(container)
 }
+
+#Preview {
+    previewContentView()
+}
+

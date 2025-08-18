@@ -7,37 +7,50 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
+@MainActor
 final class TaskViewModel: ObservableObject {
-    @Published var tasks: [TaskModel] = (1...5).map { TaskModel(title: "Tarea \($0)", description: "Descripción") }
-    @Published var searchText: String = ""
+    @Published var searchText = ""
     @Published var ascendingOrder = true
-    @Published private var newTitle = ""
-    @Published private var newDescription = ""
 
+    private let context: ModelContext
+
+    init(context: ModelContext) {
+        self.context = context
+    }
+    
     var filteredTasks: [TaskModel] {
-        tasks
-            .filter { searchText.isEmpty || $0.title.lowercased().contains(searchText.lowercased()) }
-            .sorted {
-                ascendingOrder ? $0.title < $1.title : $0.title > $1.title
-            }
-    }
-
-    func addNewTask(title: String, description: String) {
-        let trimmedTitle = title.trimmingCharacters(in: .whitespaces)
-        guard !trimmedTitle.isEmpty else { return }
-
-        let task = TaskModel(title: trimmedTitle, description: description)
-        tasks.append(task)
-    }
-
-    func toggleTask(_ task: TaskModel) {
-        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
-            tasks[index].isDone.toggle()
+        let descriptor = FetchDescriptor<TaskModel>(
+            predicate: searchText.isEmpty ? nil :
+                #Predicate { $0.title.localizedStandardContains(searchText) },
+            sortBy: [
+                SortDescriptor(\.title, order: ascendingOrder ? .forward : .reverse)
+            ]
+        )
+        
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            print("Error fetching tasks: \(error)")
+            return []
         }
     }
 
-    func deleteTask(at offsets: IndexSet) {
-        tasks.remove(atOffsets: offsets)
+    func addNewTask(title: String, details: String) {
+        let task = TaskModel(title: title, taskDescription: details)
+        context.insert(task)
+        try? context.save()
+    }
+
+    func toggleTask(_ task: TaskModel) {
+        task.isDone.toggle()
+        try? context.save()
+    }
+
+    func deleteTask(_ task: TaskModel) {
+        context.delete(task)
+        try? context.save()
     }
 }
+

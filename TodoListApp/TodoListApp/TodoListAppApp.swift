@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct TodoListAppApp: App {
     var body: some Scene {
+        // Creamos el contenedor manualmente y lo reusamos para la vista y su viewModel
+        let container = try! ModelContainer(for: TaskModel.self)
+
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: TaskViewModel(context: container.mainContext))
+                .modelContainer(container)
         }
     }
 }
+

@@ -6,17 +6,18 @@
 //
 
 import Foundation
+import SwiftData
 
-struct TaskModel: Identifiable, Codable {
-    let id: String
+@Model
+class TaskModel: Identifiable {
+    @Attribute(.unique) var id: UUID = UUID()
     var title: String
-    var description: String
+    var taskDescription: String
     var isDone: Bool
     
-    init(id: String = UUID().uuidString, title: String, description: String, isDone: Bool = false) {
-        self.id = id
+    init(title: String, taskDescription: String, isDone: Bool = false) {
         self.title = title
-        self.description = description
+        self.taskDescription = taskDescription
         self.isDone = isDone
     }
 }
