@@ -60,18 +60,20 @@ struct ContentView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
 
-                List {
-                    ForEach(filteredTasks) { task in
-                        TaskRowView(task: task) {
-                            viewModel.toggleTask(task)
+                ScrollView {
+                    LazyVStack(spacing: 12) {
+                        ForEach(filteredTasks) { task in
+                            TaskRowView(
+                                task: task,
+                                toggleDone: { viewModel.toggleTask(task) },
+                                onDelete: { viewModel.deleteTask(task) }
+                            )
+                            .padding(.horizontal, 16)
                         }
                     }
-                    .onDelete { indexSet in
-                        let toDelete = indexSet.map { viewModel.filteredTasks[$0] }
-                        toDelete.forEach { viewModel.deleteTask($0) }
-                    }
+                    .padding(.vertical, 8)
                 }
-                .listStyle(.plain)
+
             }
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
@@ -96,7 +98,7 @@ struct ContentView: View {
                 NewTaskSheet { title, details in
                     viewModel.addNewTask(title: title, details: details)
                     showingNewTaskSheet = false
-                }
+                } onCancel: { showingNewTaskSheet = false }
             }
         }
     }

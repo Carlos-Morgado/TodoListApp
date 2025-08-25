@@ -10,36 +10,90 @@ import SwiftUI
 struct TaskRowView: View {
     var task: TaskModel
     var toggleDone: () -> Void
-
+    var onDelete: () -> Void
+    
     var body: some View {
-        HStack(alignment: .top) {
-            Image(systemName: task.isDone ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(task.isDone ? .green : .gray)
-                .onTapGesture {
-                    toggleDone()
+        VStack(spacing: 0) {
+            // Hint superior solo esquinas de arriba
+            Rectangle()
+                .fill(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : Color.green)
+                .frame(height: 12)
+                .clipShape(RoundedCorner(radius: 12, corners: [.topLeft, .topRight]))
+            
+            HStack(spacing: 0) {
+                Image(systemName: task.isDone ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(task.isDone ? .green : Color(red: 230/255, green: 230/255, blue: 230/255))
+                    .font(.system(size: 28))
+                    .onTapGesture { toggleDone() }
+                
+                VStack(alignment: .leading) {
+                    Text(task.title)
+                        .font(.headline.weight(.bold))
+                        .foregroundColor(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .primary)
+                    
+                    Text("9-05-2025")
+                        .font(.footnote)
+                        .foregroundColor(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .primary)
+                    
+                    if !task.taskDescription.isEmpty {
+                        Rectangle()
+                            .fill(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .secondary)
+                            .frame(maxWidth: 30, maxHeight: 1)
+                            .padding(.top, 8)
+                        
+                        Text(task.taskDescription)
+                            .font(.subheadline)
+                            .foregroundColor(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .secondary)
+                    }
                 }
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(task.title)
-                    .font(.headline)
-                    .strikethrough(task.isDone)
-                    .foregroundColor(task.isDone ? .gray : .primary)
-
-                if !task.taskDescription.isEmpty {
-                    Text(task.taskDescription)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                .padding(.leading, 16)
+                
+                Spacer()
+                
+                HStack(spacing: 10) {
+                    Button(action: { /* editar */ }) {
+                        Image(systemName: "square.and.pencil")
+                            .foregroundColor(.blue)
+                    }
+                    Button(action: onDelete) {
+                        Image(systemName: "trash")
+                            .foregroundColor(.red)
+                    }
                 }
             }
-
-            Spacer()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
         }
-        .padding(.vertical, 8)
-        .contentShape(Rectangle())
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .green, lineWidth: 3)
+                .background(Color.white)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 
+
+// Helper para redondear solo esquinas específicas
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
+    }
+}
+
+
 #Preview {
-    TaskRowView(task: TaskModel(title:"Ejemplo de tarea", taskDescription: "Descripción opcional", isDone: false),
-                toggleDone: {})
+    TaskRowView(task: TaskModel(title:"Ejemplo de tarea",
+                                taskDescription: "Descripción opcional. Este es un ejemplo para ver el tamaño que ocupa un texto descriptivo de la tarea",
+                                isDone: true),
+                toggleDone: {},
+                onDelete: {})
 }

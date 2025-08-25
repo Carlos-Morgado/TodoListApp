@@ -11,6 +11,7 @@ struct NewTaskSheet: View {
     @State private var title: String = ""
     @State private var description: String = ""
     var onDone: (String, String) -> Void
+    var onCancel: () -> Void
 
     var body: some View {
         NavigationView {
@@ -37,7 +38,7 @@ struct NewTaskSheet: View {
 
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancelar") {
-                        onDone("", "")
+                        onCancel()
                     }
                 }
             }
@@ -46,7 +47,7 @@ struct NewTaskSheet: View {
 }
 
 #Preview {
-    NewTaskSheet { _, _ in }
+    NewTaskSheet { _, _ in } onCancel: {}
 }
 
 
