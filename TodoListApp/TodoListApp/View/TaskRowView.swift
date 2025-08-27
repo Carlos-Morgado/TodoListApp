@@ -16,7 +16,7 @@ struct TaskRowView: View {
         VStack(spacing: 0) {
             // Hint superior solo esquinas de arriba
             Rectangle()
-                .fill(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : Color.green)
+                .fill(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : task.priority.color)
                 .frame(height: 12)
                 .clipShape(RoundedCorner(radius: 12, corners: [.topLeft, .topRight]))
             
@@ -66,7 +66,7 @@ struct TaskRowView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .green, lineWidth: 3)
+                .stroke(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : task.priority.color, lineWidth: 3)
                 .background(Color.white)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -93,7 +93,7 @@ struct RoundedCorner: Shape {
 #Preview {
     TaskRowView(task: TaskModel(title:"Ejemplo de tarea",
                                 taskDescription: "Descripción opcional. Este es un ejemplo para ver el tamaño que ocupa un texto descriptivo de la tarea",
-                                isDone: true),
+                                isDone: false),
                 toggleDone: {},
                 onDelete: {})
 }

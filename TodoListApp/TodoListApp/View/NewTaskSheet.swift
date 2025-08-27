@@ -10,7 +10,9 @@ import SwiftUI
 struct NewTaskSheet: View {
     @State private var title: String = ""
     @State private var description: String = ""
-    var onDone: (String, String) -> Void
+    @State private var priorities: TaskPriority = .media
+    
+    var onDone: (String, String, TaskPriority) -> Void
     var onCancel: () -> Void
 
     var body: some View {
@@ -26,12 +28,36 @@ struct NewTaskSheet: View {
                         .frame(height: 100)
                         
                 }
+                
+                Section(header: Text("Prioridad")) {
+                    HStack(alignment: .center, spacing: 20) {
+                        Spacer()
+                        
+                        ForEach(TaskPriority.allCases) { priority in
+                            VStack {
+                                RoundedRectangle(cornerRadius: 9)
+                                    .fill(priority.color)
+                                    .frame(width: 90, height: 30)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 9)
+                                            .stroke(priorities == priority ? Color.primary : .clear, lineWidth: 2)
+                                    )
+                                    .onTapGesture {
+                                        priorities = priority
+                                    }
+                                Text(priority.title)
+                            }
+                        }
+                    
+                        Spacer()
+                    }
+                }
             }
             .navigationTitle("Nueva Tarea")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
-                        onDone(title, description)
+                        onDone(title, description, priorities)
                     }
                     .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
@@ -47,7 +73,7 @@ struct NewTaskSheet: View {
 }
 
 #Preview {
-    NewTaskSheet { _, _ in } onCancel: {}
+    NewTaskSheet { _, _, _ in } onCancel: {}
 }
 
 

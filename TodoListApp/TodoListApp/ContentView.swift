@@ -95,8 +95,8 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $showingNewTaskSheet) {
-                NewTaskSheet { title, details in
-                    viewModel.addNewTask(title: title, details: details)
+                NewTaskSheet { title, details, priority in
+                    viewModel.addNewTask(title: title, details: details, priority: priority)
                     showingNewTaskSheet = false
                 } onCancel: { showingNewTaskSheet = false }
             }
@@ -104,13 +104,14 @@ struct ContentView: View {
     }
 }
 
-
 @MainActor
 func previewContentView() -> some View {
-    let container = try! ModelContainer(for: TaskModel.self)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: TaskModel.self, configurations: config)
     let ctx = container.mainContext
+    
     // datos de ejemplo
-    let sample = TaskModel(title: "Prueba", taskDescription: "Desc")
+    let sample = TaskModel(title: "Prueba", taskDescription: "Desc", priority: .alta)
     ctx.insert(sample)
     try? ctx.save()
 

@@ -37,8 +37,8 @@ final class TaskViewModel: ObservableObject {
         }
     }
 
-    func addNewTask(title: String, details: String) {
-        let task = TaskModel(title: title, taskDescription: details)
+    func addNewTask(title: String, details: String, priority: TaskPriority) {
+        let task = TaskModel(title: title, taskDescription: details, priority: priority)
         context.insert(task)
         try? context.save()
     }

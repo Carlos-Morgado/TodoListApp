@@ -14,10 +14,12 @@ class TaskModel: Identifiable {
     var title: String
     var taskDescription: String
     var isDone: Bool
+    var priority: TaskPriority
     
-    init(title: String, taskDescription: String, isDone: Bool = false) {
+    init(title: String, taskDescription: String, isDone: Bool = false, priority: TaskPriority = .media) {
         self.title = title
         self.taskDescription = taskDescription
         self.isDone = isDone
+        self.priority = priority
     }
 }
