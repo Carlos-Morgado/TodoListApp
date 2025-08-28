@@ -108,14 +108,14 @@ struct ContentView: View {
 func previewContentView() -> some View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: TaskModel.self, configurations: config)
-    let ctx = container.mainContext
+    let context = container.mainContext
     
     // datos de ejemplo
-    let sample = TaskModel(title: "Prueba", taskDescription: "Desc", priority: .alta)
-    ctx.insert(sample)
-    try? ctx.save()
+    let sample = TaskModel(title: "Título de prueba", taskDescription: "Descripción de prueba", priority: .alta)
+    context.insert(sample)
+    try? context.save()
 
-    return ContentView(viewModel: TaskViewModel(context: ctx))
+    return ContentView(viewModel: TaskViewModel(context: context))
         .modelContainer(container)
 }
 

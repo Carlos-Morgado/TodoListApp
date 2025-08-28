@@ -31,7 +31,7 @@ struct TaskRowView: View {
                         .font(.headline.weight(.bold))
                         .foregroundColor(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .primary)
                     
-                    Text("9-05-2025")
+                    Text(task.createdAt.formatted(date: .abbreviated, time: .shortened))
                         .font(.footnote)
                         .foregroundColor(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .primary)
                     
@@ -66,7 +66,7 @@ struct TaskRowView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : task.priority.color, lineWidth: 3)
+                .stroke(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : task.priority.color, lineWidth: 2)
                 .background(Color.white)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
