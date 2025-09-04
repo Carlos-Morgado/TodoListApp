@@ -10,7 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     // Para obtener datos con @Query si los necesitas en algún momento
-    @Query(sort: \TaskModel.title, order: .forward) private var tasks: [TaskModel]
+    @Query private var tasks: [TaskModel]
 
     @StateObject private var viewModel: TaskViewModel
     @State private var showingNewTaskSheet = false
@@ -29,6 +29,7 @@ struct ContentView: View {
     }
 
     var body: some View {
+        let filteredTasks = viewModel.filteredTasks(from: tasks)
         NavigationView {
             VStack(spacing: 16) {
                 HStack {
@@ -37,8 +38,56 @@ struct ContentView: View {
                         .fontWeight(.black)
                         .foregroundColor(.blue)
                     Spacer()
-                    Button {
-                        viewModel.ascendingOrder.toggle()
+
+                    Menu {
+                        // Ordenar por título
+                        Menu("Título") {
+                            
+                            Button {
+                                viewModel.sortOption = .titleAsc
+                            } label: {
+                                Label("Ascendente", systemImage: "arrow.up")
+                            }
+                           
+                            Button {
+                                viewModel.sortOption = .titleDesc
+                            } label: {
+                                Label("Descendente", systemImage: "arrow.down")
+                            }
+                        }
+                       
+                        // Ordenar por fecha
+                        Menu("Fecha de creación") {
+                            
+                            Button {
+                                viewModel.sortOption = .dateAsc
+                            } label: {
+                                Label("Más antiguos primero", systemImage: "calendar")
+                            }
+                           
+                            Button {
+                                viewModel.sortOption = .dateDesc
+                            } label: {
+                                Label("Más recientes primero", systemImage: "calendar.badge.clock")
+                            }
+                        }
+                       
+                        // Ordenar por prioridad
+                        Menu("Prioridad") {
+                            
+                            Button {
+                                //  viewModel.sortOption = .priorityAsc
+                            } label: {
+                                Label("Alta a baja", systemImage: "flag")
+                            }
+                            
+                            Button {
+                                //    viewModel.sortOption = .priorityDesc
+                            } label: {
+                                Label("Baja a alta", systemImage: "flag.fill")
+                            }
+                        }
+                        
                     } label: {
                         Image(systemName: "arrow.up.arrow.down")
                             .foregroundColor(.blue)
@@ -65,7 +114,7 @@ struct ContentView: View {
                         ForEach(filteredTasks) { task in
                             TaskRowView(
                                 task: task,
-                                toggleDone: { viewModel.toggleTask(task) },
+                                toggleDone: { viewModel.toggleDoneTask(task) },
                                 onDelete: { viewModel.deleteTask(task) }
                             )
                             .padding(.horizontal, 16)

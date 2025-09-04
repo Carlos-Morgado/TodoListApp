@@ -9,10 +9,17 @@ import Foundation
 import SwiftUI
 import SwiftData
 
+enum SortOption {
+    case titleAsc, titleDesc
+    case dateAsc, dateDesc
+//    case priorityAsc, priorityDesc
+}
+
 @MainActor
 final class TaskViewModel: ObservableObject {
     @Published var searchText = ""
     @Published var ascendingOrder = true
+    @Published var sortOption: SortOption = .titleAsc
 
     private let context: ModelContext
 
@@ -20,20 +27,22 @@ final class TaskViewModel: ObservableObject {
         self.context = context
     }
     
-    var filteredTasks: [TaskModel] {
-        let descriptor = FetchDescriptor<TaskModel>(
-            predicate: searchText.isEmpty ? nil :
-                #Predicate { $0.title.localizedStandardContains(searchText) },
-            sortBy: [
-                SortDescriptor(\.title, order: ascendingOrder ? .forward : .reverse)
-            ]
-        )
-        
-        do {
-            return try context.fetch(descriptor)
-        } catch {
-            print("Error fetching tasks: \(error)")
-            return []
+    func filteredTasks(from tasks: [TaskModel]) -> [TaskModel] {
+        let text = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let base = tasks.filter { text.isEmpty || $0.title.localizedStandardContains(text) }
+        switch sortOption {
+        case .titleAsc:
+            return base.sorted { $0.title.localizedCompare($1.title) == .orderedAscending }
+        case .titleDesc:
+            return base.sorted { $0.title.localizedCompare($1.title) == .orderedDescending }
+        case .dateAsc:
+            return base.sorted { $0.createdAt < $1.createdAt }
+        case .dateDesc:
+            return base.sorted { $0.createdAt > $1.createdAt }
+            //        case .priorityAsc:
+            //            return base.sorted { $0.priority.rank < $1.priority.rank }
+            //        case .priorityDesc:
+            //            return base.sorted { $0.priority.rank > $1.priority.rank }
         }
     }
 
@@ -43,7 +52,7 @@ final class TaskViewModel: ObservableObject {
         try? context.save()
     }
 
-    func toggleTask(_ task: TaskModel) {
+    func toggleDoneTask(_ task: TaskModel) {
         task.isDone.toggle()
         try? context.save()
     }
