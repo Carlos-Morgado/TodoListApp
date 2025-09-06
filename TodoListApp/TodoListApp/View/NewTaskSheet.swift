@@ -8,18 +8,30 @@
 import SwiftUI
 
 struct NewTaskSheet: View {
-    @State private var title: String = ""
-    @State private var description: String = ""
-    @State private var priorities: TaskPriority = .media
-    
+    @State private var title: String
+    @State private var description: String
+    @State private var priorities: TaskPriority
+
+    var taskToEdit: TaskModel?
     var onDone: (String, String, TaskPriority) -> Void
     var onCancel: () -> Void
+
+    init(taskToEdit: TaskModel? = nil,
+         onDone: @escaping (String, String, TaskPriority) -> Void,
+         onCancel: @escaping () -> Void) {
+        self.taskToEdit = taskToEdit
+        _title = State(initialValue: taskToEdit?.title ?? "")
+        _description = State(initialValue: taskToEdit?.taskDescription ?? "")
+        _priorities = State(initialValue: taskToEdit?.priority ?? .media)
+        self.onDone = onDone
+        self.onCancel = onCancel
+    }
 
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Título")) {
-                    TextField("Introduce el título", text: $title)
+                    TextField("Introduce un título obligatorio", text: $title)
                         .multilineTextAlignment(.leading)
                 }
 
@@ -53,7 +65,7 @@ struct NewTaskSheet: View {
                     }
                 }
             }
-            .navigationTitle("Nueva Tarea")
+            .navigationTitle(taskToEdit == nil ? "Nueva Tarea" : "Editar Tarea")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {

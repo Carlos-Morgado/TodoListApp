@@ -14,7 +14,8 @@ struct ContentView: View {
 
     @StateObject private var viewModel: TaskViewModel
     @State private var showingNewTaskSheet = false
-
+    @State private var editingTask: TaskModel? = nil
+    
     // Inicializamos el StateObject con el viewModel que nos pasan desde el App
     init(viewModel: TaskViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -76,13 +77,13 @@ struct ContentView: View {
                         Menu("Prioridad") {
                             
                             Button {
-                                //  viewModel.sortOption = .priorityAsc
+                                viewModel.sortOption = .priorityAsc
                             } label: {
                                 Label("Alta a baja", systemImage: "flag")
                             }
                             
                             Button {
-                                //    viewModel.sortOption = .priorityDesc
+                                viewModel.sortOption = .priorityDesc
                             } label: {
                                 Label("Baja a alta", systemImage: "flag.fill")
                             }
@@ -115,7 +116,8 @@ struct ContentView: View {
                             TaskRowView(
                                 task: task,
                                 toggleDone: { viewModel.toggleDoneTask(task) },
-                                onDelete: { viewModel.deleteTask(task) }
+                                onDelete: { viewModel.deleteTask(task) },
+                                onEdit: { editingTask = task }
                             )
                             .padding(.horizontal, 16)
                         }
@@ -148,6 +150,14 @@ struct ContentView: View {
                     viewModel.addNewTask(title: title, details: details, priority: priority)
                     showingNewTaskSheet = false
                 } onCancel: { showingNewTaskSheet = false }
+            }
+            .sheet(item: $editingTask) { task in
+                NewTaskSheet(taskToEdit: task) { title, details, priority in
+                    viewModel.updateTask(task, title: title, details: details, priority: priority)
+                    editingTask = nil
+                } onCancel: {
+                    editingTask = nil
+                }
             }
         }
     }

@@ -12,7 +12,7 @@ import SwiftData
 enum SortOption {
     case titleAsc, titleDesc
     case dateAsc, dateDesc
-//    case priorityAsc, priorityDesc
+    case priorityAsc, priorityDesc
 }
 
 @MainActor
@@ -39,10 +39,10 @@ final class TaskViewModel: ObservableObject {
             return base.sorted { $0.createdAt < $1.createdAt }
         case .dateDesc:
             return base.sorted { $0.createdAt > $1.createdAt }
-            //        case .priorityAsc:
-            //            return base.sorted { $0.priority.rank < $1.priority.rank }
-            //        case .priorityDesc:
-            //            return base.sorted { $0.priority.rank > $1.priority.rank }
+        case .priorityAsc:
+            return base.sorted { $0.priority.rank < $1.priority.rank }
+        case .priorityDesc:
+            return base.sorted { $0.priority.rank > $1.priority.rank }
         }
     }
 
@@ -59,6 +59,13 @@ final class TaskViewModel: ObservableObject {
 
     func deleteTask(_ task: TaskModel) {
         context.delete(task)
+        try? context.save()
+    }
+    
+    func updateTask(_ task: TaskModel, title: String, details: String, priority: TaskPriority) {
+        task.title = title
+        task.taskDescription = details
+        task.priority = priority
         try? context.save()
     }
 }

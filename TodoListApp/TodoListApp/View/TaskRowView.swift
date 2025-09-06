@@ -11,6 +11,7 @@ struct TaskRowView: View {
     var task: TaskModel
     var toggleDone: () -> Void
     var onDelete: () -> Void
+    var onEdit: () -> Void
     
     var body: some View {
         VStack(spacing: 0) {
@@ -51,7 +52,7 @@ struct TaskRowView: View {
                 Spacer()
                 
                 HStack(spacing: 10) {
-                    Button(action: { /* editar */ }) {
+                    Button(action: onEdit) {
                         Image(systemName: "square.and.pencil")
                             .foregroundColor(.blue)
                     }
@@ -95,5 +96,6 @@ struct RoundedCorner: Shape {
                                 taskDescription: "Descripción opcional. Este es un ejemplo para ver el tamaño que ocupa un texto descriptivo de la tarea",
                                 isDone: false),
                 toggleDone: {},
-                onDelete: {})
+                onDelete: {},
+                onEdit: {})
 }

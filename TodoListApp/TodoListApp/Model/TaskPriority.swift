@@ -28,4 +28,12 @@ enum TaskPriority: String, Codable, CaseIterable, Identifiable {
         case .baja: return "Baja"
         }
     }
+    
+    var rank: Int {
+        switch self {
+            case .alta: return 0
+            case .media: return 1
+            case .baja: return 2
+        }
+    }
 }
