@@ -111,7 +111,7 @@ struct ContentView: View {
                 .cornerRadius(10)
 
                 ScrollView {
-                    LazyVStack(spacing: 12) {
+                    LazyVStack(spacing: 20) {
                         ForEach(filteredTasks) { task in
                             TaskRowView(
                                 task: task,
@@ -119,13 +119,13 @@ struct ContentView: View {
                                 onDelete: { viewModel.deleteTask(task) },
                                 onEdit: { editingTask = task }
                             )
-                            .padding(.horizontal, 16)
                         }
                     }
                     .padding(.vertical, 8)
                 }
 
             }
+            .padding(20)
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {

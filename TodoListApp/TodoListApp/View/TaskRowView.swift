@@ -17,34 +17,34 @@ struct TaskRowView: View {
         VStack(spacing: 0) {
             // Hint superior solo esquinas de arriba
             Rectangle()
-                .fill(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : task.priority.color)
-                .frame(height: 12)
+                .fill(task.isDone ? Color(UIColor.secondarySystemBackground).opacity(0.5) : task.priority.color)
+                .frame(height: 6)
                 .clipShape(RoundedCorner(radius: 12, corners: [.topLeft, .topRight]))
             
             HStack(spacing: 0) {
                 Image(systemName: task.isDone ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(task.isDone ? .green : Color(red: 230/255, green: 230/255, blue: 230/255))
+                    .foregroundColor(task.isDone ? .green : Color.secondary)
                     .font(.system(size: 28))
                     .onTapGesture { toggleDone() }
                 
                 VStack(alignment: .leading) {
                     Text(task.title)
                         .font(.headline.weight(.bold))
-                        .foregroundColor(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .primary)
+                        .foregroundColor(task.isDone ? Color.secondary.opacity(0.3) : Color.primary)
                     
                     Text(task.createdAt.formatted(date: .abbreviated, time: .shortened))
                         .font(.footnote)
-                        .foregroundColor(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .primary)
+                        .foregroundColor(task.isDone ? Color.secondary.opacity(0.3) : Color.primary)
                     
                     if !task.taskDescription.isEmpty {
                         Rectangle()
-                            .fill(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .secondary)
+                            .foregroundColor(task.isDone ? Color.secondary.opacity(0.3) : Color.secondary)
                             .frame(maxWidth: 30, maxHeight: 1)
                             .padding(.top, 8)
                         
                         Text(task.taskDescription)
                             .font(.subheadline)
-                            .foregroundColor(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : .secondary)
+                            .foregroundColor(task.isDone ? Color.secondary.opacity(0.3) : Color.secondary)
                     }
                 }
                 .padding(.leading, 16)
@@ -66,11 +66,10 @@ struct TaskRowView: View {
             .padding(.vertical, 16)
         }
         .background(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(task.isDone ? Color(red: 230/255, green: 230/255, blue: 230/255) : task.priority.color, lineWidth: 2)
-                .background(Color.white)
+            RoundedRectangle(cornerRadius: 6)
+                .fill(task.isDone ? Color(UIColor.secondarySystemBackground).opacity(0.5) : Color(UIColor.secondarySystemBackground))
         )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: 6))
     }
 }
 

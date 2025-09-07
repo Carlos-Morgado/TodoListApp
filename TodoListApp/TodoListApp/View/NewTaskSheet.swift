@@ -29,41 +29,75 @@ struct NewTaskSheet: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Título")) {
-                    TextField("Introduce un título obligatorio", text: $title)
-                        .multilineTextAlignment(.leading)
-                }
-
-                Section(header: Text("Descripción")) {
-                    TextEditor(text: $description)
-                        .frame(height: 100)
-                        
-                }
-                
-                Section(header: Text("Prioridad")) {
-                    HStack(alignment: .center, spacing: 20) {
-                        Spacer()
-                        
-                        ForEach(TaskPriority.allCases) { priority in
-                            VStack {
-                                RoundedRectangle(cornerRadius: 9)
-                                    .fill(priority.color)
-                                    .frame(width: 90, height: 30)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 9)
-                                            .stroke(priorities == priority ? Color.primary : .clear, lineWidth: 2)
-                                    )
-                                    .onTapGesture {
-                                        priorities = priority
+            ZStack {
+                Color(.systemBackground)
+                    .ignoresSafeArea()
+                VStack(alignment: .leading, spacing: 25) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Título")
+                            .font(.headline)
+                        TextField("* Introduce un título obligatorio", text: $title)
+                            .multilineTextAlignment(.leading)
+                            .padding(8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(UIColor.secondarySystemBackground))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(title.trimmingCharacters(in: .whitespaces).isEmpty ? Color.red : Color.clear, lineWidth: 1)
+                            )
+                    }
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Descripción")
+                            .font(.headline)
+                        TextField("Introduce una descripción", text: $description, axis: .vertical)
+                            .lineLimit(3...6)
+                            .padding(8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(UIColor.secondarySystemBackground))
+                            )
+                    }
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Prioridad")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        HStack(spacing: 20) {
+                            ForEach(TaskPriority.allCases) { priority in
+                                VStack(spacing: 10) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(priority.color)
+                                            .frame(width: 50, height: 50)
+                                            .scaleEffect(priorities == priority ? 1.2 : 1.0)
+                                            .shadow(color: priorities == priority ? priority.color.opacity(0.6) : .clear,
+                                                    radius: 6, x: 0, y: 3)
+                                            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: priorities)
+                                            .onTapGesture {
+                                                priorities = priority
+                                            }
+                                        
+                                        if priorities == priority {
+                                            Image(systemName: "checkmark")
+                                                .font(.headline.bold())
+                                                .foregroundColor(.white)
+                                                .transition(.scale)
+                                        }
                                     }
-                                Text(priority.title)
+                                    
+                                    Text(priority.title)
+                                        .font(.caption.bold())
+                                        .foregroundColor(priorities == priority ? priority.color : .secondary)
+                                }
                             }
                         }
-                    
-                        Spacer()
+                        .padding(.vertical, 12)
+
                     }
-                }
+                    Spacer()
+                    
+                }.padding()
             }
             .navigationTitle(taskToEdit == nil ? "Nueva Tarea" : "Editar Tarea")
             .toolbar {
