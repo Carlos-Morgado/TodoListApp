@@ -12,6 +12,7 @@ struct TaskRowView: View {
     var toggleDone: () -> Void
     var onDelete: () -> Void
     var onEdit: () -> Void
+    @State private var showActions = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -51,16 +52,42 @@ struct TaskRowView: View {
                 
                 Spacer()
                 
-                HStack(spacing: 10) {
-                    Button(action: onEdit) {
-                        Image(systemName: "square.and.pencil")
-                            .foregroundColor(.blue)
+                VStack(spacing: 10) {
+                    Button {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                            showActions.toggle()
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .rotationEffect(.degrees(180))
+                            .foregroundColor(.gray)
+                            .padding(10)
+                            .background(Color.gray.opacity(0.2))
+                            .clipShape(Circle())
                     }
-                    Button(action: onDelete) {
-                        Image(systemName: "trash")
-                            .foregroundColor(.red)
+                    
+                    if showActions {
+                        VStack(spacing: 20) {
+                            Button(action: onEdit) {
+                                Image(systemName: "square.and.pencil")
+                                    .foregroundColor(.blue)
+                                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                            }
+                            
+                            Button(action: onDelete) {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                            }
+                        }
+                        .padding(8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .foregroundColor(Color.gray.opacity(0.2))
+                        )
                     }
                 }
+                                
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
