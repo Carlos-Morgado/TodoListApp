@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-enum SortOption {
+enum SortOption: String, Codable {
     case titleAsc, titleDesc
     case dateAsc, dateDesc
     case priorityAsc, priorityDesc
@@ -19,12 +19,28 @@ enum SortOption {
 final class TaskViewModel: ObservableObject {
     @Published var searchText = ""
     @Published var ascendingOrder = true
-    @Published var sortOption: SortOption = .titleAsc
+    @Published var sortOption: SortOption {
+            didSet {
+                saveSortOption()
+            }
+        }
 
     private let context: ModelContext
+    private var preferences: UserPreferences?
 
     init(context: ModelContext) {
         self.context = context
+        let descriptor = FetchDescriptor<UserPreferences>()
+           if let preference = try? context.fetch(descriptor).first {
+               self.preferences = preference
+               self.sortOption = SortOption(rawValue: preference.sortOption) ?? .titleAsc
+           } else {
+               let newPreference = UserPreferences()
+               context.insert(newPreference)
+               try? context.save()
+               self.preferences = newPreference
+               self.sortOption = .titleAsc
+           }
     }
     
     func filteredTasks(from tasks: [TaskModel]) -> [TaskModel] {
@@ -44,6 +60,11 @@ final class TaskViewModel: ObservableObject {
         case .priorityDesc:
             return base.sorted { $0.priority.rank > $1.priority.rank }
         }
+    }
+    
+    private func saveSortOption() {
+        preferences?.sortOption = sortOption.rawValue
+        try? context.save()
     }
 
     func addNewTask(title: String, details: String, priority: TaskPriority) {

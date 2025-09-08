@@ -33,6 +33,9 @@ struct NewTaskSheet: View {
                 Color(.systemBackground)
                     .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 25) {
+                    
+                    Divider()
+                    
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Título")
                             .font(.headline)
@@ -48,6 +51,9 @@ struct NewTaskSheet: View {
                                     .stroke(title.trimmingCharacters(in: .whitespaces).isEmpty ? Color.red : Color.clear, lineWidth: 1)
                             )
                     }
+                    
+                    Divider()
+                    
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Descripción")
                             .font(.headline)
@@ -59,6 +65,9 @@ struct NewTaskSheet: View {
                                     .fill(Color(UIColor.secondarySystemBackground))
                             )
                     }
+                    
+                    Divider()
+                    
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Prioridad")
                             .font(.headline)
@@ -70,7 +79,7 @@ struct NewTaskSheet: View {
                                         Circle()
                                             .fill(priority.color)
                                             .frame(width: 50, height: 50)
-                                            .scaleEffect(priorities == priority ? 1.2 : 1.0)
+                                            .scaleEffect(priorities == priority ? 1.3 : 1.0)
                                             .shadow(color: priorities == priority ? priority.color.opacity(0.6) : .clear,
                                                     radius: 6, x: 0, y: 3)
                                             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: priorities)
@@ -97,7 +106,7 @@ struct NewTaskSheet: View {
                     }
                     Spacer()
                     
-                }.padding()
+                }.padding(20)
             }
             .navigationTitle(taskToEdit == nil ? "Nueva Tarea" : "Editar Tarea")
             .toolbar {

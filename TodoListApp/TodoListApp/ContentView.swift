@@ -20,14 +20,6 @@ struct ContentView: View {
     init(viewModel: TaskViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-    
-    var filteredTasks: [TaskModel] {
-        tasks
-            .filter { viewModel.searchText.isEmpty || $0.title.localizedStandardContains(viewModel.searchText) }
-            .sorted {
-                viewModel.ascendingOrder ? $0.title < $1.title : $0.title > $1.title
-            }
-    }
 
     var body: some View {
         let filteredTasks = viewModel.filteredTasks(from: tasks)

@@ -11,8 +11,10 @@ import SwiftData
 @main
 struct TodoListAppApp: App {
     var body: some Scene {
-        // Creamos el contenedor manualmente y lo reusamos para la vista y su viewModel
-        let container = try! ModelContainer(for: TaskModel.self)
+        // Definimos el esquema con los modelos que queremos guardar
+        let schema = Schema([TaskModel.self, UserPreferences.self])
+        let config = ModelConfiguration(schema: schema)
+        let container = try! ModelContainer(for: schema, configurations: config)
 
         WindowGroup {
             ContentView(viewModel: TaskViewModel(context: container.mainContext))

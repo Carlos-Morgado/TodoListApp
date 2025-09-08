@@ -25,3 +25,13 @@ class TaskModel: Identifiable {
         self.createdAt = createdAt
     }
 }
+
+@Model
+class UserPreferences {
+    @Attribute(.unique) var id: UUID = UUID()
+    var sortOption: String
+
+    init(sortOption: String = SortOption.titleAsc.rawValue) {
+        self.sortOption = sortOption
+    }
+}
