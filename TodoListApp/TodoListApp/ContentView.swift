@@ -102,20 +102,32 @@ struct ContentView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
 
-                ScrollView {
-                    LazyVStack(spacing: 20) {
-                        ForEach(filteredTasks) { task in
-                            TaskRowView(
-                                task: task,
-                                toggleDone: { viewModel.toggleDoneTask(task) },
-                                onDelete: { viewModel.deleteTask(task) },
-                                onEdit: { editingTask = task }
-                            )
+                if filteredTasks.isEmpty {
+                    Spacer()
+                    Text("¡Empieza a añadir tus tareas!")
+                        .font(.largeTitle)
+                        .fontWeight(.heavy)
+                        .foregroundColor(Color.primary)
+                        .multilineTextAlignment(.center)
+                    Image(systemName: "arrow.down")
+                        .font(.system(size: 100))
+                        .foregroundColor(Color.green)
+                        .padding(8)
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 20) {
+                            ForEach(filteredTasks) { task in
+                                TaskRowView(
+                                    task: task,
+                                    toggleDone: { viewModel.toggleDoneTask(task) },
+                                    onDelete: { viewModel.deleteTask(task) },
+                                    onEdit: { editingTask = task }
+                                )
+                            }
                         }
+                        .padding(.vertical, 8)
                     }
-                    .padding(.vertical, 8)
                 }
-
             }
             .padding(20)
             .toolbar {
