@@ -9,127 +9,122 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    // Para obtener datos con @Query si los necesitas en algún momento
     @Query private var tasks: [TaskModel]
 
     @StateObject private var viewModel: TaskViewModel
     @State private var showingNewTaskSheet = false
     @State private var editingTask: TaskModel? = nil
-    
-    // Inicializamos el StateObject con el viewModel que nos pasan desde el App
+    @State private var showMenu = false
+
     init(viewModel: TaskViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
         let filteredTasks = viewModel.filteredTasks(from: tasks)
-        NavigationView {
-            VStack(spacing: 16) {
-                HStack {
-                    Text("Todo List")
-                        .font(.largeTitle)
-                        .fontWeight(.black)
-                        .foregroundColor(.blue)
-                    Spacer()
 
-                    Menu {
-                        // Ordenar por título
-                        Menu("Título") {
-                            
-                            Button {
-                                viewModel.sortOption = .titleAsc
-                            } label: {
-                                Label("Ascendente", systemImage: "arrow.up")
-                            }
-                           
-                            Button {
-                                viewModel.sortOption = .titleDesc
-                            } label: {
-                                Label("Descendente", systemImage: "arrow.down")
-                            }
-                        }
-                       
-                        // Ordenar por fecha
-                        Menu("Fecha de creación") {
-                            
-                            Button {
-                                viewModel.sortOption = .dateAsc
-                            } label: {
-                                Label("Más antiguos primero", systemImage: "calendar")
-                            }
-                           
-                            Button {
-                                viewModel.sortOption = .dateDesc
-                            } label: {
-                                Label("Más recientes primero", systemImage: "calendar.badge.clock")
-                            }
-                        }
-                       
-                        // Ordenar por prioridad
-                        Menu("Prioridad") {
-                            
-                            Button {
-                                viewModel.sortOption = .priorityAsc
-                            } label: {
-                                Label("Alta a baja", systemImage: "flag")
-                            }
-                            
-                            Button {
-                                viewModel.sortOption = .priorityDesc
-                            } label: {
-                                Label("Baja a alta", systemImage: "flag.fill")
-                            }
-                        }
-                        
-                    } label: {
-                        Image(systemName: "arrow.up.arrow.down")
+        NavigationView {
+            ZStack(alignment: .topTrailing) {
+                VStack(spacing: 16) {
+                    HStack {
+                        Text("Todo List")
+                            .font(.largeTitle)
+                            .fontWeight(.black)
                             .foregroundColor(.blue)
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.gray)
+                        TextField("Buscar...", text: $viewModel.searchText)
+                            .textFieldStyle(PlainTextFieldStyle())
+                    }
+                    .padding(10)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+
+                    if filteredTasks.isEmpty {
+                        Spacer()
+                        Text("¡Empieza a añadir tus tareas!")
+                            .font(.largeTitle)
+                            .fontWeight(.heavy)
+                            .foregroundColor(Color.primary)
+                            .multilineTextAlignment(.center)
+                        Image(systemName: "arrow.down")
+                            .font(.system(size: 100))
+                            .foregroundColor(Color.green)
+                            .padding(8)
+                    } else {
+                        ScrollView {
+                            LazyVStack(spacing: 20) {
+                                ForEach(filteredTasks) { task in
+                                    TaskRowView(
+                                        task: task,
+                                        toggleDone: { viewModel.toggleDoneTask(task) },
+                                        onDelete: { viewModel.deleteTask(task) },
+                                        onEdit: { editingTask = task }
+                                    )
+                                }
+                            }
+                            .padding(.vertical, 8)
+                        }
+                    }
+                }
+                .padding(20)
+                
+                CustomMenu(
+                    isExpanded: $showMenu,
+                    highlightSortOption: $viewModel.sortOption,
+                    label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                            .foregroundColor(.white)
                             .imageScale(.large)
                             .padding(8)
-                            .background(Color.gray.opacity(0.2))
+                            .background(Color.blue)
                             .clipShape(Circle())
+                    },
+                    menuSections: [
+                        MenuSection(
+                            title: "Título",
+                            options: [
+                                MenuOption(title: "Ascendente", icon: "arrow.up", sortOption: .titleAsc),
+                                MenuOption(title: "Descendente", icon: "arrow.down", sortOption: .titleDesc)
+                            ]
+                        ),
+                        MenuSection(
+                            title: "Fecha",
+                            options: [
+                                MenuOption(title: "Más recientes", icon: "calendar.badge.clock", sortOption: .dateDesc),
+                                MenuOption(title: "Más antiguos", icon: "calendar", sortOption: .dateAsc)
+                            ]
+                        ),
+                        MenuSection(
+                            title: "Prioridad",
+                            options: [
+                                MenuOption(title: "Alta primero", icon: "flag.fill", sortOption: .priorityAsc),
+                                MenuOption(title: "Baja primero", icon: "flag", sortOption: .priorityDesc)
+                            ]
+                        ),
+                        MenuSection(
+                            title: "Estado",
+                            options: [
+                                MenuOption(title: "Terminadas", icon: "checkmark.circle", sortOption: .isDone),
+                                MenuOption(title: "Pendientes", icon: "circle", sortOption: .notDone)
+                            ]
+                        )
+                    ],
+                    optionLabel: { option in
+                        Label(option.title, systemImage: option.icon)
+                            .foregroundColor(.primary)
+                    },
+                    onSelect: { option in
+                        viewModel.sortOption = option.sortOption
                     }
-                }
-
-                // Barra de búsqueda
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.gray)
-                    TextField("Buscar...", text: $viewModel.searchText)
-                        .textFieldStyle(PlainTextFieldStyle())
-                }
-                .padding(10)
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-
-                if filteredTasks.isEmpty {
-                    Spacer()
-                    Text("¡Empieza a añadir tus tareas!")
-                        .font(.largeTitle)
-                        .fontWeight(.heavy)
-                        .foregroundColor(Color.primary)
-                        .multilineTextAlignment(.center)
-                    Image(systemName: "arrow.down")
-                        .font(.system(size: 100))
-                        .foregroundColor(Color.green)
-                        .padding(8)
-                } else {
-                    ScrollView {
-                        LazyVStack(spacing: 20) {
-                            ForEach(filteredTasks) { task in
-                                TaskRowView(
-                                    task: task,
-                                    toggleDone: { viewModel.toggleDoneTask(task) },
-                                    onDelete: { viewModel.deleteTask(task) },
-                                    onEdit: { editingTask = task }
-                                )
-                            }
-                        }
-                        .padding(.vertical, 8)
-                    }
-                }
+                )
+                .padding(.trailing, 16)
+                .padding(.top, 16)
             }
-            .padding(20)
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     HStack {
@@ -163,6 +158,23 @@ struct ContentView: View {
                     editingTask = nil
                 }
             }
+        }
+    }
+}
+
+extension ContentView {
+    @ViewBuilder
+    func filterButton(_ text: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(.blue)
+                Text(text)
+                    .foregroundColor(.primary)
+                Spacer()
+            }
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.1)))
         }
     }
 }

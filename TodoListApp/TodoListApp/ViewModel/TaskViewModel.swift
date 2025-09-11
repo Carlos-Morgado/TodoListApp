@@ -13,6 +13,7 @@ enum SortOption: String, Codable {
     case titleAsc, titleDesc
     case dateAsc, dateDesc
     case priorityAsc, priorityDesc
+    case isDone, notDone
 }
 
 @MainActor
@@ -59,6 +60,10 @@ final class TaskViewModel: ObservableObject {
             return base.sorted { $0.priority.rank < $1.priority.rank }
         case .priorityDesc:
             return base.sorted { $0.priority.rank > $1.priority.rank }
+        case .isDone:
+            return base.sorted { $0.isDone && !$1.isDone }
+        case .notDone:
+            return base.sorted { !$0.isDone && $1.isDone }
         }
     }
     

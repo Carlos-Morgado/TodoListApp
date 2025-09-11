@@ -13,6 +13,7 @@ struct TaskRowView: View {
     var onDelete: () -> Void
     var onEdit: () -> Void
     @State private var showActions = false
+    @State private var showDeleteAlert = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -74,7 +75,9 @@ struct TaskRowView: View {
                                     .transition(.move(edge: .trailing).combined(with: .opacity))
                             }
                             
-                            Button(action: onDelete) {
+                            Button {
+                                showDeleteAlert = true
+                            } label: {
                                 Image(systemName: "trash")
                                     .foregroundColor(.red)
                                     .transition(.move(edge: .trailing).combined(with: .opacity))
@@ -87,7 +90,16 @@ struct TaskRowView: View {
                         )
                     }
                 }
-                                
+                .alert("¿Eliminar tarea?",
+                       isPresented: $showDeleteAlert,
+                       actions: {
+                    Button("Cancelar", role: .cancel) {}
+                    Button("Eliminar", role: .destructive) {
+                        onDelete()
+                    }
+                }, message: {
+                    Text("Esta acción no se puede deshacer.")
+                })
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
