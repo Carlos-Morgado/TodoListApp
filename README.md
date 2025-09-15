@@ -27,3 +27,6 @@ Update tasks
 | :-: | :-: | :-: |
 | <img width="250" src="https://github.com/user-attachments/assets/a3e89c6e-ed84-41d9-adfb-b143e925b654"/> | <img width="250" src="https://github.com/user-attachments/assets/ed7d21e7-ee6b-4c4b-81ff-14bb655e99da"/> | <img width="250" src="https://github.com/user-attachments/assets/78362a1b-59ab-4489-95f6-ebd916f13201"/> |
 | This is a representation of the main view of the app. Here is the tasks list, where you can see all the tasks you’ve created. | This is the view where you can create a new task or edit an existing one. Enter a title, description, and select a priority to organize your tasks. | This menu allows you to sort and filter your tasks by title, date, priority, or completion status, making it easier to find what you need. |
+
+## Author
+* [**Carlos Morgado**](https://www.linkedin.com/in/carlos-morgado-alarcon/)
