@@ -25,5 +25,5 @@ Update tasks
 ## How it looks
 | Tasks List | New Task Sheet | Filter Menu |
 | :-: | :-: | :-: |
-| <img width="250" src="https://github.com/user-attachments/assets/a3e89c6e-ed84-41d9-adfb-b143e925b654"/> | <img width="250" src="https://github.com/Carlos-Morgado/rick-and-morty-swiftui/assets/122310905/df0f7362-a5f8-4d5b-a44b-dc954c66b6e0"/> | <img width="250" src="https://github.com/Carlos-Morgado/rick-and-morty-swiftui/assets/122310905/d498644d-aecb-46f4-842f-15f7454ac1cf"/> |
+| <img width="250" src="https://github.com/user-attachments/assets/a3e89c6e-ed84-41d9-adfb-b143e925b654"/> | <img width="250" src="https://github.com/user-attachments/assets/ed7d21e7-ee6b-4c4b-81ff-14bb655e99da"/> | <img width="250" src="https://github.com/user-attachments/assets/78362a1b-59ab-4489-95f6-ebd916f13201"/> |
 | This is a representation of the main view of the app. Here is the tasks list, where you can see all the tasks you’ve created. | Description for new task sheet | Description for filter menu |
