@@ -1,19 +1,26 @@
-Una sencilla aplicación de lista de tareas (To-Do List) que permite organizar y gestionar pendientes de manera práctica y rápida.
+<h1 align="center"> To-Do List App (SwiftUI Version) </h1>
 
-🚀 Características
+> ##### If you like this project, support it by "★ Star" in the repository. Thank you!
 
-➕ Agregar nuevas tareas
+A simple To-Do List application that helps you organize and manage your tasks quickly and efficiently. All with data persistence 
 
-✅ Marcar tareas como completadas
+Clean and intuitive interface
 
-🗑️ Eliminar tareas
+## Features
 
-💾 (Opcional) Persistencia de datos (dependiendo de tu implementación)
+Add new tasks
 
-📱 Diseño simple e intuitivo
+Mark tasks as completed
 
-🛠️ Tecnologías utilizadas
+Delete tasks
 
-Lenguaje: Swift
+Update tasks
 
-Framework/Librerías: SwiftUI
+## Tools & Frameworks Used
+
+| Tool                                                                                                  | Used for                                                             |
+|-------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| MVVM                                                                                                  | Architectural design pattern for separating the logic form the views |
+| SwiftUI                                                                                               | Framework used to build apps                                         |
+
+## How it looks
