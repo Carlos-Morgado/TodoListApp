@@ -1,0 +1,54 @@
+/* 
+  Localizable.strings
+  TodoListApp
+
+  Created by Carlos Morgado Alarcón on 15/9/25.
+  
+*/
+
+// Tasks list general view
+
+"mainView_textField_searchTask" = "Buscar...";
+"mainView_emptyTasksList_getStart" = "¡Empieza a añadir tus tareas!";
+
+// Filter Menu
+"filterMenu_mainTitle" = "Filtrar por...";
+"filterMenu_titleSection" = "Título";
+"filterMenu_ascendantOption" = "Ascendente";
+"filterMenu_descendantOption" = "Descendiente";
+"filterMenu_dateSection" = "Fecha";
+"filterMenu_mostRecentOption" = "Recientes";
+"filterMenu_olderOption" = "Antiguos";
+"filterMenu_prioritySection" = "Prioridad";
+"filterMenu_highPriorityOption" = "Alta";
+"filterMenu_lowPriorityOption" = "Baja";
+"filterMenu_stateSection" = "Estado";
+"filterMenu_doneStateOption" = "Terminados";
+"filterMenu_pendingStateOption" = "Pendientes";
+
+// Delete Modal
+
+"deleteModal_title" = "¿Eliminar tarea?";
+"deleteModal_message" = "Esta acción no se puede deshacer.";
+"deleteModal_cancelButton" = "Cancelar";
+"deleteModal_deleteButton" = "Eliminar";
+
+"priority_high" = "Alta";
+"priority_medium" = "Media";
+"priority_low" = "Baja";
+
+
+// Navigation Titles
+"newTaskSheet_navigation_newTask" = "Nueva Tarea";
+"newTaskSheet_navigation_editTask" = "Editar Tarea";
+
+// Field Labels
+"newTaskSheet_label_title" = "Título";
+"newTaskSheet_placeholder_title" = "* Introduce un título obligatorio";
+"newTaskSheet_label_description" = "Descripción";
+"newTaskSheet_placeholder_description" = "Introduce una descripción";
+"newTaskSheet_label_priority" = "Prioridad";
+
+// Toolbar Buttons
+"newTaskSheet_button_done" = "Hecho";
+"newTaskSheet_button_cancel" = "Cancelar";

@@ -1,0 +1,55 @@
+/* 
+  Localizable.strings
+  TodoListApp
+
+  Created by Carlos Morgado Alarcón on 15/9/25.
+  
+*/
+
+// Tasks list general view
+
+"mainView_textField_searchTask" = "Search...";
+"mainView_emptyTasksList_getStart" = "Start adding your tasks!";
+
+// Filter Menu
+
+"filterMenu_mainTitle" = "Filter by...";
+"filterMenu_titleSection" = "Title";
+"filterMenu_ascendantOption" = "Ascending";
+"filterMenu_descendantOption" = "Descending";
+"filterMenu_dateSection" = "Date";
+"filterMenu_mostRecentOption" = "Most Recent";
+"filterMenu_olderOption" = "Oldest";
+"filterMenu_prioritySection" = "Priority";
+"filterMenu_highPriorityOption" = "High Priority";
+"filterMenu_lowPriorityOption" = "Low Priority";
+"filterMenu_stateSection" = "Status";
+"filterMenu_doneStateOption" = "Completed";
+"filterMenu_pendingStateOption" = "Pending";
+
+// Delete Modal
+
+"deleteModal_title" = "Delete Task?";
+"deleteModal_message" = "This action cannot be undone.";
+"deleteModal_cancelButton" = "Cancel";
+"deleteModal_deleteButton" = "Delete";
+
+"priority_high" = "High";
+"priority_medium" = "Medium";
+"priority_low" = "Low";
+
+// Navigation Titles
+"newTaskSheet_navigation_newTask" = "New Task";
+"newTaskSheet_navigation_editTask" = "Edit Task";
+
+// Field Labels
+"newTaskSheet_label_title" = "Title";
+"newTaskSheet_placeholder_title" = "* Enter a required title";
+"newTaskSheet_label_description" = "Description";
+"newTaskSheet_placeholder_description" = "Enter a description";
+"newTaskSheet_label_priority" = "Priority";
+
+// Toolbar Buttons
+"newTaskSheet_button_done" = "Done";
+"newTaskSheet_button_cancel" = "Cancel";
+

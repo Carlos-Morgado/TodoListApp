@@ -90,15 +90,15 @@ struct TaskRowView: View {
                         )
                     }
                 }
-                .alert("¿Eliminar tarea?",
+                .alert("deleteModal_title",
                        isPresented: $showDeleteAlert,
                        actions: {
-                    Button("Cancelar", role: .cancel) {}
-                    Button("Eliminar", role: .destructive) {
+                    Button("deleteModal_cancelButton", role: .cancel) {}
+                    Button("deleteModal_deleteButton", role: .destructive) {
                         onDelete()
                     }
                 }, message: {
-                    Text("Esta acción no se puede deshacer.")
+                    Text("deleteModal_message")
                 })
             }
             .padding(.horizontal, 16)
