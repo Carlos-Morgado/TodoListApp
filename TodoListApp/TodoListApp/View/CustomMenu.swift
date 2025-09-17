@@ -8,23 +8,23 @@
 import SwiftUI
 
 struct CustomMenu<LabelView: View, OptionView: View>: View {
-    @Binding var isExpanded: Bool
+    @Binding var fullMenuIsExpanded: Bool
     @Binding var highlightSortOption: SortOption
     @State private var expandedSection: UUID? = nil
-    let label: () -> LabelView
+    let mainMenuButtonlabel: () -> LabelView
     let menuSections: [MenuSection]
     let optionLabel: (MenuOption) -> OptionView
-    let onSelect: (MenuOption) -> Void
+    let onSelectOption: (MenuOption) -> Void
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 14) {
             Button {
-                withAnimation(.spring) { isExpanded.toggle() }
-            } label: { label() }
+                withAnimation(.spring) { fullMenuIsExpanded.toggle() }
+            } label: { mainMenuButtonlabel() }
             
-            if isExpanded {
+            if fullMenuIsExpanded {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Filtrar por...")
+                    Text("filterMenu_mainTitle")
                         .padding(.vertical, 6)
                         .padding(.horizontal, 12)
                     Rectangle()
@@ -56,9 +56,9 @@ struct CustomMenu<LabelView: View, OptionView: View>: View {
                                     ForEach(section.options) { option in
                                         Button {
                                             withAnimation {
-                                                onSelect(option)
+                                                onSelectOption(option)
                                                 highlightSortOption = option.sortOption
-                                                isExpanded = false
+                                                fullMenuIsExpanded = false
                                             }
                                         } label: {
                                             optionLabel(option)
@@ -94,13 +94,13 @@ struct CustomMenu<LabelView: View, OptionView: View>: View {
 // MARK: - Modelos de menú
 struct MenuSection: Identifiable {
     let id = UUID()
-    let title: String
+    let title: LocalizedStringKey
     let options: [MenuOption]
 }
 
 struct MenuOption: Identifiable {
     let id = UUID()
-    let title: String
+    let title: LocalizedStringKey
     let icon: String
     let sortOption: SortOption
 }
@@ -124,9 +124,9 @@ struct StatefulPreviewWrapper<Value, Content: View>: View {
     StatefulPreviewWrapper(false) { expanded in
         StatefulPreviewWrapper(SortOption.titleAsc) { selectedOption in
             CustomMenu(
-                isExpanded: expanded,
+                fullMenuIsExpanded: expanded,
                 highlightSortOption: selectedOption,
-                label: {
+                mainMenuButtonlabel: {
                     Image(systemName: "arrow.up.arrow.down")
                         .foregroundColor(.blue)
                         .imageScale(.large)
@@ -154,7 +154,7 @@ struct StatefulPreviewWrapper<Value, Content: View>: View {
                     Label(option.title, systemImage: option.icon)
                         .foregroundColor(.primary)
                 },
-                onSelect: { option in
+                onSelectOption: { option in
                     print("Seleccionado: \(option.title)")
                 }
             )

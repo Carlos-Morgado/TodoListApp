@@ -37,9 +37,9 @@ struct NewTaskSheet: View {
                     Divider()
                     
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Título")
+                        Text("newTaskSheet_label_title")
                             .font(.headline)
-                        TextField("* Introduce un título obligatorio", text: $title)
+                        TextField("newTaskSheet_placeholder_title", text: $title)
                             .multilineTextAlignment(.leading)
                             .padding(8)
                             .background(
@@ -55,9 +55,9 @@ struct NewTaskSheet: View {
                     Divider()
                     
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Descripción")
+                        Text("newTaskSheet_label_description")
                             .font(.headline)
-                        TextField("Introduce una descripción", text: $description, axis: .vertical)
+                        TextField("newTaskSheet_placeholder_description", text: $description, axis: .vertical)
                             .lineLimit(3...6)
                             .padding(8)
                             .background(
@@ -69,7 +69,7 @@ struct NewTaskSheet: View {
                     Divider()
                     
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Prioridad")
+                        Text("newTaskSheet_label_priority")
                             .font(.headline)
                             .foregroundColor(.primary)
                         HStack(spacing: 20) {
@@ -108,17 +108,17 @@ struct NewTaskSheet: View {
                     
                 }.padding(20)
             }
-            .navigationTitle(taskToEdit == nil ? "Nueva Tarea" : "Editar Tarea")
+            .navigationTitle(taskToEdit == nil ? "newTaskSheet_navigation_newTask" : "newTaskSheet_navigation_editTask")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
+                    Button("newTaskSheet_button_done") {
                         onDone(title, description, priorities)
                     }
                     .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
 
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") {
+                    Button("newTaskSheet_button_cancel") {
                         onCancel()
                     }
                 }

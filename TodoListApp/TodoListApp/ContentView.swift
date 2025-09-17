@@ -37,7 +37,7 @@ struct ContentView: View {
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
-                        TextField("Buscar...", text: $viewModel.searchText)
+                        TextField("mainView_textField_searchTask", text: $viewModel.searchText)
                             .textFieldStyle(PlainTextFieldStyle())
                     }
                     .padding(10)
@@ -46,7 +46,7 @@ struct ContentView: View {
 
                     if filteredTasks.isEmpty {
                         Spacer()
-                        Text("¡Empieza a añadir tus tareas!")
+                        Text("mainView_emptyTasksList_getStart")
                             .font(.largeTitle)
                             .fontWeight(.heavy)
                             .foregroundColor(Color.primary)
@@ -74,9 +74,9 @@ struct ContentView: View {
                 .padding(20)
                 
                 CustomMenu(
-                    isExpanded: $showMenu,
+                    fullMenuIsExpanded: $showMenu,
                     highlightSortOption: $viewModel.sortOption,
-                    label: {
+                    mainMenuButtonlabel: {
                         Image(systemName: "arrow.up.arrow.down")
                             .foregroundColor(.white)
                             .imageScale(.large)
@@ -86,31 +86,31 @@ struct ContentView: View {
                     },
                     menuSections: [
                         MenuSection(
-                            title: "Título",
+                            title: "filterMenu_titleSection",
                             options: [
-                                MenuOption(title: "Ascendente", icon: "arrow.up", sortOption: .titleAsc),
-                                MenuOption(title: "Descendente", icon: "arrow.down", sortOption: .titleDesc)
+                                MenuOption(title: "filterMenu_ascendantOption", icon: "arrow.up", sortOption: .titleAsc),
+                                MenuOption(title: "filterMenu_descendantOption", icon: "arrow.down", sortOption: .titleDesc)
                             ]
                         ),
                         MenuSection(
-                            title: "Fecha",
+                            title: "filterMenu_dateSection",
                             options: [
-                                MenuOption(title: "Más recientes", icon: "calendar.badge.clock", sortOption: .dateDesc),
-                                MenuOption(title: "Más antiguos", icon: "calendar", sortOption: .dateAsc)
+                                MenuOption(title: "filterMenu_mostRecentOption", icon: "calendar.badge.clock", sortOption: .dateDesc),
+                                MenuOption(title: "filterMenu_olderOption", icon: "calendar", sortOption: .dateAsc)
                             ]
                         ),
                         MenuSection(
-                            title: "Prioridad",
+                            title: "filterMenu_prioritySection",
                             options: [
-                                MenuOption(title: "Alta primero", icon: "flag.fill", sortOption: .priorityAsc),
-                                MenuOption(title: "Baja primero", icon: "flag", sortOption: .priorityDesc)
+                                MenuOption(title: "filterMenu_highPriorityOption", icon: "flag.fill", sortOption: .priorityAsc),
+                                MenuOption(title: "filterMenu_lowPriorityOption", icon: "flag", sortOption: .priorityDesc)
                             ]
                         ),
                         MenuSection(
-                            title: "Estado",
+                            title: "filterMenu_stateSection",
                             options: [
-                                MenuOption(title: "Terminadas", icon: "checkmark.circle", sortOption: .isDone),
-                                MenuOption(title: "Pendientes", icon: "circle", sortOption: .notDone)
+                                MenuOption(title: "filterMenu_doneStateOption", icon: "checkmark.circle", sortOption: .isDone),
+                                MenuOption(title: "filterMenu_pendingStateOption", icon: "circle", sortOption: .notDone)
                             ]
                         )
                     ],
@@ -118,7 +118,7 @@ struct ContentView: View {
                         Label(option.title, systemImage: option.icon)
                             .foregroundColor(.primary)
                     },
-                    onSelect: { option in
+                    onSelectOption: { option in
                         viewModel.sortOption = option.sortOption
                     }
                 )
